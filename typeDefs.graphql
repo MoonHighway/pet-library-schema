@@ -1,22 +1,81 @@
 scalar Date
 
-type Pet {
+union FamilyPet = Cat | Dog
+union ExoticPet = Rabbit | Stingray
+
+interface Pet {
   id: ID!
   name: String!
-  weight: Float!
-  category: PetCategory!
-  status: PetStatus!
-  photo: Photo!
-  dueDate: Date!
+  weight: Float
+  status: PetStatus
+  photo: Photo
+  dueDate: Date
   inCareOf: Customer
+}
+
+type Cat implements Pet {
+  id: ID!
+  name: String!
+  weight: Float
+  status: PetStatus
+  photo: Photo
+  dueDate: Date
+  inCareOf: Customer
+  sleepAmount: Int
+  curious: Boolean
+}
+
+type Dog implements Pet {
+  id: ID!
+  name: String!
+  weight: Float
+  status: PetStatus
+  photo: Photo
+  dueDate: Date
+  inCareOf: Customer
+  good: Boolean
+}
+
+type Rabbit implements Pet {
+  id: ID!
+  name: String!
+  weight: Float
+  status: PetStatus
+  photo: Photo
+  dueDate: Date
+  inCareOf: Customer
+  favoriteFood: String
+  floppy: Int
+}
+
+type Stingray implements Pet {
+  id: ID!
+  name: String!
+  weight: Float
+  status: PetStatus
+  photo: Photo
+  dueDate: Date
+  inCareOf: Customer
+  chill: Int
+  fast: Boolean
 }
 
 type Customer {
   username: ID!
   name: String!
+  location: String!
+    @deprecated(
+      reason: "use `locationDetails { city state }` instead."
+    )
+  locationDetails: Location
   dateCreated: Date
   currentPets: [Pet!]!
   checkoutHistory: [Checkout!]!
+}
+
+type Location {
+  city: String!
+  state: String!
 }
 
 type Checkout {
@@ -61,8 +120,14 @@ type CheckOutPayload {
 }
 
 type Query {
-  totalPets(status: PetStatus): Int!
-  allPets(category: PetCategory, status: PetStatus): [Pet!]!
+  totalPets: Int!
+  availablePets: Int!
+  checkedOutPets: Int!
+  allPets(limit: Int!, page: Int!): [Pet!]!
+  allAvailablePets: [Pet!]!
+  allCheckedOutPets: [Pet!]!
+  familyPets: [FamilyPet!]!
+  exoticPets: [ExoticPet!]!
   totalCustomers: Int!
   allCustomers: [Customer!]!
   me: Customer
