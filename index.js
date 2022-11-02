@@ -1,4 +1,11 @@
-const { ApolloServer } = require("apollo-server");
+const { ApolloServer } = require("@apollo/server");
+const {
+  startStandaloneServer,
+} = require("@apollo/server/standalone");
+const { addMocksToSchema } = require("@graphql-tools/mock");
+const {
+  makeExecutableSchema,
+} = require("@graphql-tools/schema");
 const { readFileSync } = require("fs");
 
 const typeDefs = readFileSync(
@@ -6,8 +13,17 @@ const typeDefs = readFileSync(
   "UTF-8"
 );
 
-const server = new ApolloServer({ typeDefs, mocks: true });
+async function startApolloServer() {
+  const server = new ApolloServer({
+    schema: addMocksToSchema({
+      schema: makeExecutableSchema({ typeDefs }),
+    }),
+  });
+  const { url } = await startStandaloneServer(server, {
+    listen: { port: 4000 },
+  });
 
-server.listen().then(({ url }) => {
-  console.log(`Server running at ${url}`);
-});
+  console.log(`🚠 Snowtooth Server Running at ${url}`);
+}
+
+startApolloServer();
