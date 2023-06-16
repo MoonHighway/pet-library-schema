@@ -10,7 +10,7 @@
   "author": "Moon Highway",
   "license": "MIT",
   "dependencies": {
-    "@apollo/server": "^4.0.5",
+    "@apollo/server": "^4.7.4",
     "@graphql-tools/mock": "^8.7.10",
     "@graphql-tools/schema": "^9.0.8",
     "graphql": "^16.6.0",
